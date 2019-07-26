@@ -40,6 +40,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
+        android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header_length">
@@ -54,15 +55,51 @@
             android:id="@+id/radio_button_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:text="@string/radio_button_medium" />
 
         <RadioButton
             android:id="@+id/radio_button_long"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:text="@string/radio_button_long" />
 
+        <RadioButton
+            android:id="@+id/radio_button_custom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/radio_button_custom" />
+
     </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/linear_custom_length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radio_group_length">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_desired_length"/>
+
+        <EditText
+            android:id="@+id/text_custom_length"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:imeOptions="actionDone"
+            android:inputType="number"/>
+
+
+    </LinearLayout>
 
     <CheckBox
         android:id="@+id/check_lowercase"
@@ -74,7 +111,7 @@
         app:layout_constraintEnd_toStartOf="@+id/check_uppercase"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/radio_group_length" />
+        app:layout_constraintTop_toBottomOf="@id/linear_custom_length" />
 
     <CheckBox
         android:id="@+id/check_uppercase"
@@ -85,7 +122,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/check_lowercase"
-        app:layout_constraintTop_toBottomOf="@id/radio_group_length" />
+        app:layout_constraintTop_toBottomOf="@id/linear_custom_length" />
 
     <CheckBox
         android:id="@+id/check_number"
@@ -112,7 +149,7 @@
         android:id="@+id/button_generate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="10dp"
         android:background="@color/colorButton"
         android:fontFamily="sans-serif"
         android:text="@string/generate"
@@ -130,20 +167,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_generate" />
 
-    <Button
+
+    <ImageButton
         android:id="@+id/button_copy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@android:color/white"
-        android:drawableStart="@drawable/ic_copy_black"
-        android:fontFamily="sans-serif"
-        android:padding="10dp"
-        android:text="@string/copy_clipboard"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_result" />
+        android:src="@drawable/ic_copy_black"
+        android:background="@null"
+        android:padding="5dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/text_result"
+        app:layout_constraintStart_toEndOf="@id/text_result"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/button_reset"

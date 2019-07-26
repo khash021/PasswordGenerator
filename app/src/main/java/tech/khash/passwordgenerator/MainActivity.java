@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,10 +26,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //TODO: no repeat option?
 
     //Views
-    private Button buttonGenerate, buttonCopy, buttonReset;
+    private Button buttonGenerate, buttonReset;
+    private ImageButton buttonCopy;
     private TextView textResult;
     private RadioGroup lengthRadioGroup;
     private CheckBox checkBoxUppercase, checkBoxLowercase, checkBoxSymbol, checkBoxNumbers;
+    private EditText customLength;
+    private LinearLayout customLengthLayout;
 
     private boolean uppercase, lowercase, number, symbol;
 
@@ -45,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonGenerate = findViewById(R.id.button_generate);
         buttonCopy = findViewById(R.id.button_copy);
         buttonReset = findViewById(R.id.button_reset);
+        customLength = findViewById(R.id.text_custom_length);
+        customLengthLayout = findViewById(R.id.linear_custom_length);
 
         checkBoxLowercase = findViewById(R.id.check_lowercase);
         checkBoxUppercase = findViewById(R.id.check_uppercase);
@@ -67,12 +75,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (checkedId) {
                     case R.id.radio_button_short:
                         length = LENGTH_SHORT;
+                        customLengthLayout.setVisibility(View.GONE);
                         break;
                     case R.id.radio_button_medium:
                         length = LENGTH_MEDIUM;
+                        customLengthLayout.setVisibility(View.GONE);
                         break;
                     case R.id.radio_button_long:
                         length = LENGTH_LONG;
+                        customLengthLayout.setVisibility(View.GONE);
+                        break;
+                    case R.id.radio_button_custom:
+                        //show the layout
+                        customLengthLayout.setVisibility(View.VISIBLE);
+                        customLength.setCursorVisible(true);
                         break;
                 }
             }
@@ -134,6 +150,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
+        //get the length value if it is custom
+        if (lengthRadioGroup.getCheckedRadioButtonId() == R.id.radio_button_custom) {
+            String lengthCustomString = customLength.getText().toString().trim();
+            if (lengthCustomString.length() > 0) {
+                int customLengthInteger = Integer.valueOf(lengthCustomString);
+                if (customLengthInteger > 30) {
+                    showToast(getString(R.string.length_long_error));
+                    return;
+                } else {
+                    customLength.setCursorVisible(false);
+                    length = customLengthInteger;
+                }
+            } else {
+                lengthRadioGroup.check(R.id.radio_button_medium);
+            }
+        }
+
         //create a PassGenerator object
         // PassGenerator(int length, boolean lowercase, boolean uppercase, boolean numbers, boolean symbols)
         PassGenerator passGenerator = new PassGenerator(length, lowercase, uppercase, number, symbol);
@@ -142,6 +175,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (generatedPass != null && generatedPass.length() > 0) {
             textResult.setText(generatedPass);
+            //show copy button
+            buttonCopy.setVisibility(View.VISIBLE);
         } else {
             showToast(getString(R.string.error_generate_password));
         }
@@ -172,6 +207,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setupDefaultState() {
         //clear any text from password
         textResult.setText("");
+
+        //hide linear view
+        customLengthLayout.setVisibility(View.GONE);
+        customLength.getText().clear();
+
+        //hide the copy button
+        buttonCopy.setVisibility(View.INVISIBLE);
 
         //set length to medium
         lengthRadioGroup.check(R.id.radio_button_medium);
