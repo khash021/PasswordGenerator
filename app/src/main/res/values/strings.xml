@@ -1,16 +1,24 @@
 <resources>
     <string name="app_name">Password Generator Lite</string>
-    <string name="copied_toast">Copied to clipboard</string>
-    <string name="Password">Password</string>
-    <string name="text_instructions">Please select your desired criteria,\nthen press \'Generate\'</string>
-    <string name="generate"><b>Generate</b></string>
+
     <string name="lowercase">Lowercase</string>
-    <string name="characters">Characters</string>
     <string name="uppercase">Uppercase</string>
+    <string name="symbol">Symbols</string>
+    <string name="numbers">Numbers</string>
+
+    <string name="generate"><b>Generate</b></string>
+    <string name="reset">Reset</string>
+    <string name="copy_clipboard">Copy</string>
+
+    <string name="Password">Password</string>
+    <string name="length">Length</string>
     <string name="radio_button_short">Short</string>
     <string name="radio_button_medium">Medium</string>
     <string name="radio_button_long">Long</string>
-    <string name="length">Length</string>
-    <string name="copy_clipboard">Copy</string>
+
+    <string name="copied_toast">Copied to clipboard</string>
+    <string name="text_instructions">Please select your desired criteria,\nthen press \'Generate\'</string>
     <string name="nothing_to_copy">Nothing to copy</string>
+    <string name="no_criteria_toast">No criteria is selected</string>
+    <string name="error_generate_password">Error generating password</string>
 </resources>

@@ -8,20 +8,31 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, CheckBox.OnCheckedChangeListener {
+
+    //TODO: add landscape orientation
+    //TODO: add menu
+    //TODO: add savedInstance and all the corresponding methods
+    //TODO: should we do spaces? should we check for them? should we add an options?
+    //TODO: no repeat option?
 
     //Views
-    private Button buttonGenerate, buttonCopy;
+    private Button buttonGenerate, buttonCopy, buttonReset;
     private TextView textResult;
-    RadioGroup lengthRadioGroup;
+    private RadioGroup lengthRadioGroup;
+    private CheckBox checkBoxUppercase, checkBoxLowercase, checkBoxSymbol, checkBoxNumbers;
 
-    private final int LENGTH_SHORT = 1;
-    private final int LENGTH_MEDIUM = 2;
-    private final int LENGTH_LONG = 3;
+    private boolean uppercase, lowercase, number, symbol;
+
+    public final int LENGTH_SHORT = 6;
+    public final int LENGTH_MEDIUM = 10;
+    public final int LENGTH_LONG = 16;
     private int length;
 
 
@@ -33,9 +44,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textResult = findViewById(R.id.text_result);
         buttonGenerate = findViewById(R.id.button_generate);
         buttonCopy = findViewById(R.id.button_copy);
+        buttonReset = findViewById(R.id.button_reset);
+
+        checkBoxLowercase = findViewById(R.id.check_lowercase);
+        checkBoxUppercase = findViewById(R.id.check_uppercase);
+        checkBoxSymbol = findViewById(R.id.check_symbol);
+        checkBoxNumbers = findViewById(R.id.check_number);
+
+        checkBoxLowercase.setOnCheckedChangeListener(this);
+        checkBoxUppercase.setOnCheckedChangeListener(this);
+        checkBoxSymbol.setOnCheckedChangeListener(this);
+        checkBoxNumbers.setOnCheckedChangeListener(this);
 
         buttonCopy.setOnClickListener(this);
         buttonGenerate.setOnClickListener(this);
+        buttonReset.setOnClickListener(this);
 
         lengthRadioGroup = findViewById(R.id.radio_group_length);
         lengthRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -43,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.radio_button_short:
-                        length = LENGTH_LONG;
+                        length = LENGTH_SHORT;
                         break;
                     case R.id.radio_button_medium:
                         length = LENGTH_MEDIUM;
@@ -54,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });//radio group listener
+        setupDefaultState();
+
     }//onCreate
 
     @Override
@@ -72,8 +97,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     copyToClipboard(pass);
                 }
                 break;
+            case R.id.button_reset:
+                setupDefaultState();
+                break;
         }//switch
     }//onClick
+
+    //This will update our booleans based on the checkboxes' state
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.check_lowercase:
+                lowercase = isChecked;
+                break;
+            case R.id.check_uppercase:
+                uppercase = isChecked;
+                break;
+            case R.id.check_number:
+                number = isChecked;
+                break;
+            case R.id.check_symbol:
+                symbol = isChecked;
+                break;
+        }//switch
+    }//onCheckedChanged
 
 
     /* ------------------------------- HELPER METHODS -------------------------*/
@@ -81,7 +128,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Generate password
     private void generatePassword() {
 
+        //make sure that at least one check box is checked
+        if (!checkBoxSymbol.isChecked() && !checkBoxUppercase.isChecked() && !checkBoxLowercase.isChecked()) {
+            showToast(getString(R.string.no_criteria_toast));
+            return;
+        }
 
+        //create a PassGenerator object
+        // PassGenerator(int length, boolean lowercase, boolean uppercase, boolean numbers, boolean symbols)
+        PassGenerator passGenerator = new PassGenerator(length, lowercase, uppercase, number, symbol);
+
+        String generatedPass = passGenerator.generate();
+
+        if (generatedPass != null && generatedPass.length() > 0) {
+            textResult.setText(generatedPass);
+        } else {
+            showToast(getString(R.string.error_generate_password));
+        }
     }//generatePassword
 
     //helper method for copying text to the clipboard
@@ -105,5 +168,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }//showToast
 
+    //helper method for setting the default UI
+    private void setupDefaultState() {
+        //clear any text from password
+        textResult.setText("");
+
+        //set length to medium
+        lengthRadioGroup.check(R.id.radio_button_medium);
+
+        //check all the boxes
+        checkBoxLowercase.setChecked(true);
+        checkBoxUppercase.setChecked(true);
+        checkBoxNumbers.setChecked(true);
+        checkBoxSymbol.setChecked(true);
+    }//setupDefaultState
 
 }//class
