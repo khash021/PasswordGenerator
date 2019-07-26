@@ -160,9 +160,14 @@
 
     <TextView
         android:id="@+id/text_result"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="16dp"
+        app:autoSizeTextType="uniform"
+        android:gravity="center"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMaxTextSize="16sp"
+        app:autoSizeStepGranularity="1sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_generate" />
@@ -178,20 +183,7 @@
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="@id/text_result"
         app:layout_constraintStart_toEndOf="@id/text_result"
-        android:visibility="gone"/>
-
-    <Button
-        android:id="@+id/button_reset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:background="@color/colorButton"
-        android:fontFamily="sans-serif"
-        android:text="@string/reset"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:visibility="gone" />
 
 
 </android.support.constraint.ConstraintLayout>

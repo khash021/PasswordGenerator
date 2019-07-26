@@ -3,9 +3,14 @@ package tech.khash.passwordgenerator;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -26,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //TODO: no repeat option?
 
     //Views
-    private Button buttonGenerate, buttonReset;
+    private Button buttonGenerate;
     private ImageButton buttonCopy;
     private TextView textResult;
     private RadioGroup lengthRadioGroup;
@@ -40,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public final int LENGTH_MEDIUM = 10;
     public final int LENGTH_LONG = 16;
     private int length;
+    private final int LENGTH_MAXIMUM = 300;
 
 
     @Override
@@ -50,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textResult = findViewById(R.id.text_result);
         buttonGenerate = findViewById(R.id.button_generate);
         buttonCopy = findViewById(R.id.button_copy);
-        buttonReset = findViewById(R.id.button_reset);
         customLength = findViewById(R.id.text_custom_length);
         customLengthLayout = findViewById(R.id.linear_custom_length);
 
@@ -66,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         buttonCopy.setOnClickListener(this);
         buttonGenerate.setOnClickListener(this);
-        buttonReset.setOnClickListener(this);
+        customLength.setOnClickListener(this);
 
         lengthRadioGroup = findViewById(R.id.radio_group_length);
         lengthRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -113,8 +118,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     copyToClipboard(pass);
                 }
                 break;
-            case R.id.button_reset:
-                setupDefaultState();
+            case R.id.text_custom_length:
+                customLength.setCursorVisible(true);
                 break;
         }//switch
     }//onClick
@@ -138,6 +143,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }//switch
     }//onCheckedChanged
 
+    //Initialize the contents of the Activity's standard options menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        //get the inflater
+        MenuInflater inflater = getMenuInflater();
+
+        //inflate the menu
+        inflater.inflate(R.menu.menu, menu);
+
+        //You must return true for the menu to be displayed; if you return false it will not be shown.
+        return true;
+    }//onCreateOptionsMenu
+
+    //hanlde menu clicks
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //get the id of the menu item
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.menu_reset:
+                setupDefaultState();
+                return true;
+            case R.id.menu_contact:
+                //send email. Use Implicit intent so the user can choose their preferred app
+                //create uri for email
+                String email = "passwordgenerator@khash.tech";
+                Uri emailUri = Uri.parse("mailto:" + email);
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, emailUri);
+                //make sure the device can handle the intent before sending
+                if (emailIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(emailIntent);
+                    return true;
+                }
+                return super.onOptionsItemSelected(item);
+            case R.id.menu_about:
+                //TODO: add this
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }//onOptionsItemSelected
 
     /* ------------------------------- HELPER METHODS -------------------------*/
 
@@ -155,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String lengthCustomString = customLength.getText().toString().trim();
             if (lengthCustomString.length() > 0) {
                 int customLengthInteger = Integer.valueOf(lengthCustomString);
-                if (customLengthInteger > 30) {
+                if (customLengthInteger > LENGTH_MAXIMUM) {
                     showToast(getString(R.string.length_long_error));
                     return;
                 } else {

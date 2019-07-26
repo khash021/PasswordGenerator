@@ -10,6 +10,9 @@
     <string name="reset">Reset</string>
     <string name="copy_clipboard">Copy</string>
 
+    <string name="contact">Contact</string>
+    <string name="about">About</string>
+
     <string name="Password">Password</string>
     <string name="length">Length</string>
     <string name="radio_button_short">Short</string>
@@ -23,6 +26,7 @@
     <string name="nothing_to_copy">Nothing to copy</string>
     <string name="no_criteria_toast">No criteria is selected</string>
     <string name="error_generate_password">Error generating password</string>
-    <string name="length_long_error">Length should be below 30</string>
+    <string name="length_long_error">Maximum length is 300</string>
+
 
 </resources>
